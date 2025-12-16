@@ -3,82 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Consulta Segura de Saldo</title>
+    <title>Consulta de Saldo</title>
     <style>
         body { font-family: sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 40px; }
-        .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        h2 { text-align: center; color: #333; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; width: 100%; }
-        button:disabled { background: #ccc; }
-        #res { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; text-align: center; line-height: 1.5; }
+        .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
+        h2 { color: #333; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        button { flex: 1; padding: 12px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; color: white; font-size: 16px; }
+        #btnConsultar { background: #007bff; }
+        #btnConsultar:hover { background: #0056b3; }
+        #btnLimpar { background: #6c757d; }
+        #btnLimpar:hover { background: #5a6268; }
+        #res { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; line-height: 1.6; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h2>Consulta de Saldo</h2>
+    <h2>Consultar Valor</h2>
     <input type="text" id="nome" placeholder="Nome Completo">
-    <input type="text" id="cpf" placeholder="CPF (Ex: 123.456.789-98)">
-    <button id="btnConsultar" onclick="consultar()">Consultar</button>
+    <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)">
+    
+    <div class="btn-group">
+        <button id="btnConsultar" onclick="consultar()">Consultar</button>
+        <button id="btnLimpar" onclick="limpar()">Limpar</button>
+    </div>
+    
     <div id="res"></div>
 </div>
 
 <script>
-    // IMPORTANTE: Substitua o link abaixo pelo link que termina em /exec
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTg9h-jkRnrogqtGcyRC-ZIKfKZ1gvp1cp7IgddibaN5AxQbWSY6m016YkbOHa1zfxNA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwTg9h-jkRnrogqtGcyRC-ZIKfKZ1gvp1cp7IgddibaN5AxQbWSY6m016YkbOHa1zfxNA/exec"; 
+
+    // Função que coloca os pontos e o traço automaticamente
+    function mascaraCPF(i) {
+        let v = i.value;
+        
+        // Remove tudo o que não é dígito
+        v = v.replace(/\D/g, "");
+
+        // Coloca um ponto entre o terceiro e o quarto dígitos
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+
+        // Coloca um ponto entre o sexto e o sétimo dígitos
+        v = v.replace(/(\d{3})(\d)/, "$1.$2");
+
+        // Coloca um hífen entre o nono e o décimo dígitos
+        v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+        i.value = v;
+    }
 
     async function consultar() {
         const nome = document.getElementById('nome').value.trim();
-        const cpf = document.getElementById('cpf').value.trim();
+        let cpfInput = document.getElementById('cpf').value.trim();
         const resDiv = document.getElementById('res');
-        const btn = document.getElementById('btnConsultar');
 
-        if(!nome || !cpf) {
-            alert("Por favor, preencha o Nome e o CPF.");
-            return;
-        }
+        if(!nome || !cpfInput) return alert("Por favor, preencha todos os campos.");
 
-        // Limpa e mostra estado de carregamento
+        // Limpa o CPF para enviar apenas os números para o Google (Segurança extra)
+        const cpfApenasNumeros = cpfInput.replace(/\D/g, '');
+
         resDiv.style.display = "block";
-        resDiv.style.background = "#e9ecef";
+        resDiv.style.background = "#eee";
         resDiv.style.color = "#333";
-        resDiv.innerHTML = "Buscando informações... aguarde.";
-        btn.disabled = true;
+        resDiv.innerHTML = "Aguarde, consultando...";
 
         try {
-            // Enviando para o Google Apps Script
-            const response = await fetch(SCRIPT_URL, {
-                method: "POST",
-                mode: "no-cors", // Necessário para evitar erro de redirecionamento do Google
-                body: JSON.stringify({ nome: nome, cpf: cpf })
-            });
-
-            /* NOTA: Como o Google usa redirecionamentos, o modo 'no-cors' não permite ler a resposta JSON diretamente.
-               Para simplificar e funcionar agora, vamos assumir que se não deu erro de rede, o script processou.
-               No entanto, para ler o SALDO, o ideal é o script estar configurado como expliquei antes.
-            */
-            
-            // Tentativa de buscar via GET para validar se o usuário existe (Contorno de segurança)
-            const getResponse = await fetch(`${SCRIPT_URL}?nome=${encodeURIComponent(nome)}&cpf=${encodeURIComponent(cpf)}`);
-            const dados = await getResponse.json();
+            const urlFinal = `${SCRIPT_URL}?nome=${encodeURIComponent(nome)}&cpf=${encodeURIComponent(cpfApenasNumeros)}`;
+            const response = await fetch(urlFinal);
+            const dados = await response.json();
 
             if (dados.status === "sucesso") {
                 resDiv.style.background = "#d4edda";
                 resDiv.style.color = "#155724";
-                resDiv.innerHTML = `<strong>Olá, ${dados.nome}!</strong><br>Seu saldo disponível é:<br><span style="font-size: 1.2em; font-weight: bold;">${dados.saldo}</span>`;
+                resDiv.innerHTML = `<strong>Sucesso!</strong><br>Olá, ${dados.nome}.<br>Seu saldo disponível é: <strong>${dados.saldo}</strong>`;
             } else {
                 resDiv.style.background = "#f8d7da";
                 resDiv.style.color = "#721c24";
-                resDiv.innerHTML = "Dados não encontrados. Verifique o Nome e CPF.";
+                resDiv.innerHTML = "Os dados informados não foram encontrados.";
             }
         } catch (e) {
             resDiv.style.background = "#fff3cd";
-            resDiv.innerHTML = "Erro ao processar consulta. Verifique o link do script.";
-            console.error(e);
-        } finally {
-            btn.disabled = false;
+            resDiv.style.color = "#856404";
+            resDiv.innerHTML = "Erro ao conectar com o servidor. Tente novamente.";
         }
+    }
+
+    function limpar() {
+        document.getElementById('nome').value = "";
+        document.getElementById('cpf').value = "";
+        const resDiv = document.getElementById('res');
+        resDiv.style.display = "none";
+        resDiv.innerHTML = "";
     }
 </script>
 </body>
