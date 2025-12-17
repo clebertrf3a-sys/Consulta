@@ -9,15 +9,8 @@
         .box { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center; }
         
         /* Estilo da Logomarca */
-       .logo { 
-    max-width: 100%; /* Garante que não ultrapasse a caixa */
-    height: auto;    /* Mantém a proporção */
-    width: 250px;    /* Define um tamanho fixo elegante */
-    margin-bottom: 20px; 
-    display: block;  /* Ajuda na centralização */
-    margin-left: auto;
-    margin-right: auto;
-}
+        .logo { max-width: 200px; margin-bottom: 20px; }
+        
         h2 { color: #333; margin-bottom: 20px; font-size: 1.3em; line-height: 1.3; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
         .btn-group { display: flex; gap: 10px; margin-top: 10px; }
@@ -27,42 +20,24 @@
         #btnLimpar { background: #6c757d; }
         #btnLimpar:hover { background: #5a6268; }
         #res { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; line-height: 1.6; text-align: left; }
-        .filiacao-box { 
-            margin-top: 20px; 
-            padding-top: 15px; 
-            border-top: 1px dashed #adb5bd; 
-            text-align: center; /* Centraliza tudo */
-        }
-        
-        .filiacao-box p {
-            font-size: 1.05em; /* Aumenta um pouco o texto */
-            color: #444;
-            margin-bottom: 15px;
-        }
-
-        .btn-filiar {
-            display: inline-block;
-            background-color: #004a99;
-            color: white !important; /* Força a cor branca */
-            padding: 10px 20px;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-            font-size: 1.1em; /* Fonte maior para o link */
-            transition: background 0.3s;
-        }
-
-        .btn-filiar:hover {
-            background-color: #003366;
-            text-decoration: none;
-        }
+        .filiacao-box { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #adb5bd; font-size: 0.9em; color: #444; }
+        .filiacao-box a { color: #004a99; font-weight: bold; text-decoration: none; }
+        .filiacao-box a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
 <div class="box">
     
-
+.logo { 
+    max-width: 100%; /* Garante que não ultrapasse a caixa */
+    height: auto;    /* Mantém a proporção */
+    width: 250px;    /* Define um tamanho fixo elegante */
+    margin-bottom: 20px; 
+    display: block;  /* Ajuda na centralização */
+    margin-left: auto;
+    margin-right: auto;
+}
 
 
 <img src="https://raw.githubusercontent.com/clebertrf3a-sys/Consulta/main/sintrajudlogo.png">
@@ -111,25 +86,19 @@
             const response = await fetch(urlFinal);
             const dados = await response.json();
 
-           if(dados.status === "sucesso") {
+            if (dados.status === "sucesso") {
                 resDiv.style.background = "#d4edda";
                 resDiv.style.color = "#155724";
                 resDiv.innerHTML = `
-                    <div style="text-align: center;">
-                        <strong>Olá, ${dados.nome}!</strong><br>
-                        O valor do seu RPV será: <br>
-                        <span style="font-size: 1.4em; font-weight: bold;">${dados.saldo}</span><br>
-                        <small style="display:block; margin-top:5px;">(Acrescer juros e correção monetária de cerca de 50%)</small>
-                    </div>
+                    <strong>Olá, ${dados.nome}!</strong><br>
+                    O valor do seu RPV será: <strong>${dados.saldo}</strong><br>
+                    <small>(Acrescer juros e correção monetária de cerca de 50%)</small>
                     
                     <div class="filiacao-box">
-                        <p>Se ainda não é filiado, filie-se para fortalecer o seu sindicato e adiantar a sua execução:</p>
-                        <a href="https://sintrajud.org.br/sindicalize-se" target="_blank" class="btn-filiar">
-                            Sindicalize-se Aqui
-                        </a>
+                        Se ainda não é filiado, filie-se para fortalecer o seu sindicato e adiantar a sua execução em: <br>
+                        <a href="https://sintrajud.org.br/sindicalize-se" target="_blank">sintrajud.org.br/sindicalize-se</a>
                     </div>
-                ;
-            }
+                `;
             } else {
                 resDiv.style.background = "#f8d7da";
                 resDiv.style.color = "#721c24";
@@ -151,8 +120,4 @@
     }
 </script>
 </body>
-
 </html>
-
-
-
