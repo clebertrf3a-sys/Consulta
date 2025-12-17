@@ -111,7 +111,7 @@
             const response = await fetch(urlFinal);
             const dados = await response.json();
 
-           if (dados.status === "sucesso") {
+           if(dados.status === "sucesso") {
                 resDiv.style.background = "#d4edda";
                 resDiv.style.color = "#155724";
                 resDiv.innerHTML = `
@@ -128,7 +128,7 @@
                             Sindicalize-se Aqui
                         </a>
                     </div>
-                `;
+                ;
             }
             } else {
                 resDiv.style.background = "#f8d7da";
@@ -153,5 +153,6 @@
 </body>
 
 </html>
+
 
 
