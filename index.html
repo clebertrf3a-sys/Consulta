@@ -27,9 +27,35 @@
         #btnLimpar { background: #6c757d; }
         #btnLimpar:hover { background: #5a6268; }
         #res { margin-top: 20px; padding: 15px; border-radius: 5px; display: none; line-height: 1.6; text-align: left; }
-        .filiacao-box { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #adb5bd; font-size: 0.9em; color: #444; }
-        .filiacao-box a { color: #004a99; font-weight: bold; text-decoration: none; }
-        .filiacao-box a:hover { text-decoration: underline; }
+        .filiacao-box { 
+            margin-top: 20px; 
+            padding-top: 15px; 
+            border-top: 1px dashed #adb5bd; 
+            text-align: center; /* Centraliza tudo */
+        }
+        
+        .filiacao-box p {
+            font-size: 1.05em; /* Aumenta um pouco o texto */
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .btn-filiar {
+            display: inline-block;
+            background-color: #004a99;
+            color: white !important; /* Força a cor branca */
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 1.1em; /* Fonte maior para o link */
+            transition: background 0.3s;
+        }
+
+        .btn-filiar:hover {
+            background-color: #003366;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
@@ -121,3 +147,4 @@
 </body>
 
 </html>
+
