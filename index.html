@@ -28,7 +28,19 @@
 <body>
 
 <div class="box">
-   <img src="sintrajudlogo.png" alt="Logo Sintrajud" class="logo">
+    
+.logo { 
+    max-width: 100%; /* Garante que não ultrapasse a caixa */
+    height: auto;    /* Mantém a proporção */
+    width: 250px;    /* Define um tamanho fixo elegante */
+    margin-bottom: 20px; 
+    display: block;  /* Ajuda na centralização */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+<img src="https://raw.githubusercontent.com/clebertrf3a-sys/Consulta/main/sintrajudlogo.png">
     
     <h2>Consultar Valor de IRPF sobre Abono de Férias</h2>
     
@@ -74,25 +86,20 @@
             const response = await fetch(urlFinal);
             const dados = await response.json();
 
-           if (dados.status === "sucesso") {
+            if (dados.status === "sucesso") {
                 resDiv.style.background = "#d4edda";
                 resDiv.style.color = "#155724";
                 resDiv.innerHTML = `
-                    <div style="text-align: center;">
-                        <strong>Olá, ${dados.nome}!</strong><br>
-                        O valor do seu RPV será: <br>
-                        <span style="font-size: 1.4em; font-weight: bold;">${dados.saldo}</span><br>
-                        <small style="display:block; margin-top:5px;">(Acrescer juros e correção monetária de cerca de 50%)</small>
-                    </div>
+                    <strong>Olá, ${dados.nome}!</strong><br>
+                    O valor do seu RPV será: <strong>${dados.saldo}</strong><br>
+                    <small>(Acrescer juros e correção monetária de cerca de 50%)</small>
                     
                     <div class="filiacao-box">
-                        <p>Se ainda não é filiado, filie-se para fortalecer o seu sindicato e adiantar a sua execução:</p>
-                        <a href="https://sintrajud.org.br/sindicalize-se" target="_blank" class="btn-filiar">
-                           text-align: center Sindicalize-se Aqui
-                        </a>
+                        Se ainda não é filiado, filie-se para fortalecer o seu sindicato e adiantar a sua execução em: <br>
+                        <a href="https://sintrajud.org.br/sindicalize-se" target="_blank">sintrajud.org.br/sindicalize-se</a>
                     </div>
-                ;
-            }  else {
+                `;
+            } else {
                 resDiv.style.background = "#f8d7da";
                 resDiv.style.color = "#721c24";
                 resDiv.innerHTML = "Os dados informados não foram encontrados.";
